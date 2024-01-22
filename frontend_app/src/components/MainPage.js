@@ -11,6 +11,7 @@ const MainPage = (props) => {
             <p>Введите логин</p>
             <Input > </Input>
             <Button variant="contained" onClick={() => navigate('/chat', {replace: false})}>nfjdfnjd</Button>
+            <p>fmdsmkfd</p>
             
             
         </div>
