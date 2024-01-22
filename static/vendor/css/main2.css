@@ -1,0 +1,59 @@
+* {
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    box-sizing: border-box;
+}
+
+header {
+    height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.exit {
+    font-size: 2em;
+    transform: rotate(180deg);
+    text-decoration: none;
+    color: black;
+}
+
+#container {
+    height: 80vh;
+    width: 100%;
+    border: 2px solid #000;
+    overflow: scroll;
+}
+
+.my-message {
+    background-color: #00a6ff;
+    width: 60%;
+    min-height: 4em;
+    font-size: 25px;
+    overflow-wrap: normal;
+}
+
+.alien-message {
+    background-color: #c2c2c2;
+    width: 60%;
+    min-height: 4em;
+    font-size: 25px;
+}
+
+#containertextsubmit {
+    display: flex;
+    height: 10vh;
+}
+
+#message {
+    width: 90%;
+    height: 3em;
+    font-size: 22px;
+}
+
+#submit {
+    width: 10%;
+    height: 3em;
+    font-size: 22px;
+}

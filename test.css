@@ -1,0 +1,19 @@
+.container{
+    display: flex;
+}
+.block{
+    height: 100px;
+    width: 100px;
+    color: red;
+    border: 1px solid black;
+}
+
+@media (max-width: 900px) {
+    .container{
+        flex-direction: column;
+    }
+    .block{
+        height: 200px;
+        width: 200px;
+    }
+}

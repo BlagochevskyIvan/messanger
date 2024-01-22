@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'vendor/css/chat.css'%}">
+    <title>Document</title>
+</head>
+
+<body>
+    <header>
+        <form action="{% url 'chat_app:search_user'%}">
+            <input type="text" name="username">
+            <input type="submit">
+        </form>
+
+        <a href="{%url 'user_app:logout'%}">Выйти</a>
+
+        <a href="{%url 'chat_app:main'%}">В меню</a>
+    </header>
+    <main>
+        <div class="nav-menu">
+            <div class="contacts">
+                {% for dialog in dialogs %}
+                <a href="?dialog={{dialog.dialog_info.id}}">
+                    <div class="contact {% if current_dialog == dialog.dialog_info.id %} active {% endif%}">
+                        {{dialog.name}}
+                        <img src="{{dialog.dialog_info.avatar.url}}" alt="">
+                    </div>
+                </a>
+                {%endfor%}
+            </div>
+        </div>
+        <div class="chat-menu">
+            <div class="messages">
+                {% if messages %}
+                    {% for message in messages%}
+                        <div class="message">
+                            {{message.message.text}}
+                        </div>
+                    {%endfor%}
+                {% elif messages == None %}
+                    Выберите пользователя для общения
+                {% else %}
+                    У вас пока нет переписки с этим пользователем
+                {% endif %}
+            </div>
+            <form action="{%url 'chat_app:send_message'%}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="user_id" value="{{request.user.id}}">
+                <input type="hidden" name="dialog_id" value="{{current_dialog}}">
+                <input type="text" name="text">
+                <input type="submit">
+            </form>
+        </div>
+        <div>
+            <a href="{%url 'user_app:settings'%}">Настройки</a>
+        </div>
+    </main>
+</body>
+
+</html>

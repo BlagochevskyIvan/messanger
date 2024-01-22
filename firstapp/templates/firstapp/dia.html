@@ -1,0 +1,80 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="{%static 'vendor/css/main2.css'%}">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+        integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+    <header>
+        <a class="exit" href="{%url 'main'%}"><span>&#10148</span></a>
+        <h1>{{roomname}}</h1>
+    </header>
+    <div id="container">
+    </div>
+    <script>
+        $(document).ready(function () {
+            setInterval(function () {
+                $.ajax({
+                    type: "GET",
+                    url: "/get_messages/{{room_info.id}}/",
+                    success: function (response) {
+                        console.log(response);
+                        // delete
+                        $("#container").empty()
+                        for (var key in response.messages) {
+                            // console.log(response.messages[key].text)
+                            if (response.messages[key].user == "{{username}}") {
+                                var classname = "my-message"
+                            }
+                            else {
+                                var classname = "alien-message"
+                            }
+                            var all_text = `<div class="${classname}">` + response.messages[key].user + "<br>" + response.messages[key].text + "</div>"
+                            $('#container').append(all_text)
+                        }
+                    }
+                })
+            }, 1000)
+        })
+    </script>
+    <form id="message-form">
+        {% csrf_token %}
+        <input type="hidden" name="username" id="username" value="{{username}}">
+        <input type="hidden" name="room_id" id="room_id" value="{{room_info.id}}">
+        <div id="containertextsubmit">
+            <input type="text" name="message" id="message" placeholder="type your message">
+            <input type="submit" id="submit" value="&#10148;">
+        </div>
+    </form>
+</body>
+<script type="text/javascript">
+    $(document).on("submit", "#message-form", function (e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: "POST",
+            url: "/send_message/",
+            data: {
+                username: $("#username").val(),
+                room_id: $("#room_id").val(),
+                message: $("#message").val(),
+                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+            },
+            success: function (data) {
+                //alert(data)
+            }
+        });
+        document.getElementById("message").value = ""
+    });
+</script>
+
+</html>

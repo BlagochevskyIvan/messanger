@@ -1,0 +1,43 @@
+*{
+    margin: 0;
+}
+
+.contacts{
+    display: flex;
+    flex-direction: column;
+}
+
+
+header{ 
+    height: 5vh;
+    border-bottom: black 1px solid;
+    display: flex;
+}
+
+main{
+    display: flex;
+}
+.nav-menu{
+    width: 20vw;
+    height: calc(95vh - 1px);
+    border-right: 1px black solid;
+}
+.chat-menu{
+    width: 80vw;
+}
+.message{
+    width: 10vw;
+    height: 5em;
+    border: black 1px solid;
+}
+.contact{
+    width: 10vw;
+    height: 5em;
+    border: black 1px solid;
+}
+.contact img{
+    height: 30px;
+}
+.active{
+    background-color: rgba(0, 0, 0, 0.164);
+}

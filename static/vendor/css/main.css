@@ -1,0 +1,33 @@
+h1{
+    font-family: sans-serif;
+    background-color: rgb(189, 189, 189);
+    text-align: center;
+}
+.img-style{
+    height: 300px ;
+}
+.img-style2{
+    height: 600px ;
+}
+.block1{
+    height: 500px;
+    width: 500px;
+    background-color: black;
+    transition: 1s;
+}
+.block1:hover{
+    background-color: rgb(102, 102, 102);
+    transform: translate(100px, 100px) rotate(90deg);
+}
+.block2{
+    height: 500px;
+    width: 500px;
+    background-color: rgb(255, 0, 0);
+}
+.text1{
+    background-color: rgb(223, 223, 223);
+    transition: 1s;
+}
+.text1:hover{
+    background-color: rgb(132, 132, 132);
+}
