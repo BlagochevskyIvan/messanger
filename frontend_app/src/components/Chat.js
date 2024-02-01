@@ -17,13 +17,16 @@ const Chat = (props) => {
   }, []);
 
   return (
-    <Grid container direction="row" justifyContent="center" height="70vh">
-      <Grid item bgcolor={"red"} xs={3}>
-        <Grid item direction="column">
-            <Typography>Чаты</Typography>
+    <Grid container direction="column" justifyContent="flex-start"  alignItems="flex-start" height="100vh">
+      <Grid item bgcolor={"gray"} height="10vh">
+        <Typography>Чаты</Typography>
+      </Grid>
+      <Grid container direction="row" justifyContent="flex-start"  alignItems="flex-start" height="90vh">
+        <Grid container direction="column" justifyContent="flex-start"  alignItems="flex-start" height="90vh" width="30vh">
+        </Grid>
+        <Grid container direction="column" justifyContent="flex-start"  alignItems="flex-start" height="90vh" width="70vh">
         </Grid>
       </Grid>
-      <Grid item xs={7}>nfmdjk</Grid>
     </Grid>
   );
 };
