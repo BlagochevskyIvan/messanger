@@ -10,7 +10,7 @@ const Chat = (props) => {
   const [messages, setMessages] = useState([[1]]);
 
   useEffect(() => {
-    axios.get(base_url + "test3/").then((res) => {
+    axios.get(base_url + "chat/").then((res) => {
       console.log(res.data);
       setMessages(res.data);
     });
