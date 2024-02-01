@@ -20,29 +20,10 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 
-# from frontend.views import index
-
-# urlpatterns = [
-#     path("admin/", admin.site.urls),
-#     path("user/", include("user_app.urls", "user_app")),
-#     path("", mainplug, name="main"),
-#     path("sign_in/", main),
-#     path("settings/", usersettings),
-#     path("conf/", conf),
-#     path("checkform", checkform),
-#     path("favicon.ico/", favicon),
-#     path("send_message/", send_message),
-#     path("get_messages/<str:room_id>/", get_messages),
-#     path("<str:roomname>/", dialog),
-# ]
-
 urlpatterns = [
+    path("", include("chat_app.urls", "chat_app")),
     path("admin/", admin.site.urls),
     path("user/", include("user_app.urls", "user_app")),
-    path("chat/", include("chat_app.urls", "chat_app")),
-    path("", include("frontend_app.urls", "frontend_app")),
-    #path("tich/", index),
-    # path("conf/", conf)
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

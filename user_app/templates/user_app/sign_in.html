@@ -7,15 +7,7 @@
     <title>комнаты</title>
 </head>
 <body>
-    <!-- <form action="checkform" method="post"> 
-        {% csrf_token %}
-        <label for="username">username</label>
-        <input type="text" name="username" placeholder="имя пользователя">
-        <label for="roomname">roomname</label>
-        <input type="text" name="roomname">
-        <input type="submit" value="подтвердить">
-    </form> -->
-    <form action="{% url 'user_app:sign_in'%}" method="post">
+    <form action="{% url 'user_app:main'%}" method="post">
         {% csrf_token %}
         <label for="{{form.username.id_for_label}}">{{form.username.label}}</label>
         {{form.username}}
@@ -26,7 +18,7 @@
         <div id="eye" onclick="show_password()">eye</div>
         <input type="submit" value="подтвердить">
     </form>
-
+    <a href="{% url 'user_app:sign_up' %}">Регистрация</a>
     <script>
         function show_password(){
             let pass = document.getElementById('id_password')

@@ -3,12 +3,31 @@ from django.urls import reverse
 from user_app.forms import UserLoginForm, UserRegForm
 from django.contrib import auth
 
+def sign_in(request):
+    if request.method == 'GET':
+        # if request.user.is_authenticated:
+        #     return HttpResponseRedirect(reverse('chat_app:main'))
+        user_form = UserLoginForm()
+    else:
+        print(request.POST)
+        user_form = UserLoginForm(data = request.POST)
+        if user_form.is_valid():
+            username = request.POST["username"]
+            password = request.POST["password"]
+            user = auth.authenticate(username=username, password=password)
+            print(user)
+            if user:
+                auth.login(request, user)
+                # Успешный вход
+                return HttpResponseRedirect(reverse('chat_app:chat'))
+    context = {
+            "form": user_form,
+        }
+    return render(request, "user_app/sign_in.html", context)
 
 def login(request):
     return HttpResponse("Ответ")
 
-def main(request):
-    return render(request, 'user_app/main.html')
 
 def reg(request):
     if request.method == "GET":
@@ -28,29 +47,6 @@ def reg(request):
 def usersettings(request):
     return HttpResponse("настройки")
 
-def sign_in(request):
-    if request.method == 'GET':
-        # print(request.session.keys())
-        # print(request.GET.get("username"))
-        if request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('chat_app:main'))
-        user_form = UserLoginForm()
-    else:
-        print(request.POST)
-        user_form = UserLoginForm(data = request.POST)
-        if user_form.is_valid():
-            username = request.POST["username"]
-            password = request.POST["password"]
-            user = auth.authenticate(username=username, password=password)
-            print(user)
-            if user:
-                auth.login(request, user)
-                # Успешный вход
-                return HttpResponseRedirect(reverse('chat_app:main'))
-    context = {
-            "form": user_form,
-        }
-    return render(request, "user_app/sign_in.html", context)
 
 def logout(request):
     auth.logout(request)

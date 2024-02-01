@@ -2,33 +2,12 @@ from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from chat_app.models import *
 from user_app.models import User
 from django.http import JsonResponse
-from rest_framework import generics
-
-from .serializers import *
-
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 # Create your views here.
 
-def main(request):
-    # print(Dialog.objects.all()[0])
-    # print(Dialog.objects.all()[0].name)
-    print(User.objects.filter(is_superuser = 1 ))
-    print(User.objects.filter(first_name = 'Ибрагим'))
-    print(User.objects.get(username = '123'))
-
-    user = User.objects.get(id=4)
-    print(user.first_name, user.last_name)
-    user.first_name = 'Floppa'
-    print(user.first_name, user.last_name)
-    user.save()
-    print(request.user) # Твой нынешний аккаунт
-    print(Message.objects.first().author)
-    # mes1 = Message.objects.create(text='Че ваще?', author=user, type_message_id=1)
-    # mes2 = Message.objects.create(text='Че ваще?2', author_id=4, type_message_id=1)
-    # mes1.save()
-    # mes2.save()
-    return render(request, 'chat_app/main.html')
-
+@login_required
 def chat(request):
     dialog_requested_id = request.GET.get('dialog')
     # print(Member.objects.filter(user = request.user))
@@ -99,6 +78,10 @@ def get_messages(request, dialog_id):
     return content
     # return JsonResponse({"messages": list(messages.values())})
 
+def get_messages_list(request, dialog_id):
+    content = Content.objects.filter(dialog_id=dialog_id)
+    return JsonResponse(content)
+
 def send_message(request):
     user_id = request.POST['user_id']
     dialog_id = request.POST['dialog_id']
@@ -110,19 +93,4 @@ def send_message(request):
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
-class DialogsView(generics.ListAPIView):
-    queryset = Dialog.objects.all()
-    serializer_class = DialogSerializer
 
-class ContentView(generics.ListAPIView):
-    queryset = Content.objects.all()
-    serializer_class = ContentSerializer
-
-class GetMessagesView(generics.ListAPIView):
-    serializer_class = MessageSerializer
-    
-    def get_queryset(self):
-        dialog_id = 1
-        content = Content.objects.filter(dialog_id = dialog_id).values_list('message_id', flat = True)
-        messages = Message.objects.filter(id__in = content)
-        return messages

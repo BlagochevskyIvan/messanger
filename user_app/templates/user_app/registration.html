@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <form action="{% url 'user_app:reg'%}" method="post">
+    <form action="{% url 'user_app:sign_up'%}" method="post">
         {% csrf_token %}
         {% for f in registration%}
         <div>

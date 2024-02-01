@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="{% static 'vendor/css/chat.css'%}">
     <title>Document</title>
 </head>
@@ -17,14 +18,12 @@
         </form>
 
         <a href="{%url 'user_app:logout'%}">Выйти</a>
-
-        <a href="{%url 'chat_app:main'%}">В меню</a>
     </header>
     <main>
         <div class="nav-menu">
-            <div class="contacts">
+            <div class="contacts" id="contacts">
                 {% for dialog in dialogs %}
-                <a href="?dialog={{dialog.dialog_info.id}}">
+                <a class='link-dia' id="{{dialog.dialog_info.id}}" href="?dialog={{dialog.dialog_info.id}}">
                     <div class="contact {% if current_dialog == dialog.dialog_info.id %} active {% endif%}">
                         {{dialog.name}}
                         <img src="{{dialog.dialog_info.avatar.url}}" alt="">
@@ -59,6 +58,21 @@
             <a href="{%url 'user_app:settings'%}">Настройки</a>
         </div>
     </main>
+    <script type="text/javascript">
+        $('.contacts').on('click', '.link-dia', function (e){
+            e.preventDefault();
+            console.log(e.currentTarget.id)
+
+            $.ajax({
+                type:'GET',
+                url: "chat/get_messages_list/" + e.currentTarget.id,
+                success: function (data){
+                    console.log(data)
+                }
+            })
+        })
+
+    </script>
 </body>
 
 </html>
