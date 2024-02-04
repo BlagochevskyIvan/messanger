@@ -80,7 +80,7 @@ def get_messages(request, dialog_id):
 
 def get_messages_list(request, dialog_id):
     content = Content.objects.filter(dialog_id=dialog_id)
-    return JsonResponse(content)
+    return JsonResponse(dict(content))
 
 def send_message(request):
     user_id = request.POST['user_id']
