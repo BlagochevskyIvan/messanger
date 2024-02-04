@@ -47,7 +47,7 @@
                     У вас пока нет переписки с этим пользователем
                 {% endif %}
             </div>
-            <form action="{%url 'chat_app:send_message'%}" method="post">
+            <form class="send_message">
                 {% csrf_token %}
                 <input type="hidden" name="user_id" value="{{request.user.id}}">
                 <input type="hidden" name="dialog_id" value="{{current_dialog}}">
@@ -55,22 +55,47 @@
                 <input type="submit">
             </form>
         </div>
-        <div>
-            <a href="{%url 'user_app:settings'%}">Настройки</a>
-        </div>
     </main>
+    <!-- <div>${message.text}</div> -->
     <script type="text/javascript">
         $('.contacts').on('click', '.link-dia', function (e){
-            e.preventDefault();
+            // e.preventDefault();
             console.log(e.currentTarget.id)
 
             $.ajax({
                 type:'GET',
                 url: "chat/get_messages_list/" + e.currentTarget.id,
                 success: function (data){
+                    console.log(data.messages)
+                    $('.messages').empty()
+                    let user_id = +'{{user_id}}'
+                    for(let i in data.messages){
+                        console.log(data.messages[i])
+                        let message = data.messages[i]
+                        let message_div = `<div class="message ${(user_id===message.author_id)?'my-mes' : 'al-mes'}">${message.text}</div>` 
+                        $('.messages').append(message_div)
+                    }
+                }
+            })
+        })
+
+        $('.send_message').submit(function (e){
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: 'chat/sendmessage',
+                data: 
+                {
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                    user_id: $('input[name=user_id]').val(),
+                    dialog_id: $('input[name=dialog_id]').val(),
+                    text: $('input[name=text]').val(),                    
+                },
+                success: function(data){
                     console.log(data)
                 }
             })
+
         })
 
     </script>

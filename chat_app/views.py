@@ -12,7 +12,7 @@ def chat(request):
     dialog_requested_id = request.GET.get('dialog')
     # print(Member.objects.filter(user = request.user))
     dialogs_by_user = Member.objects.filter(user = request.user)
-    context = {'dialogs': [], 'messages': None}
+    context = {'dialogs': [], 'messages': None, 'user_id': request.user.id}
     for dialog in dialogs_by_user:
         dialog_info = Dialog.objects.get(id = dialog.dialog_id)
         print(dialog_info.avatar)
@@ -79,8 +79,9 @@ def get_messages(request, dialog_id):
     # return JsonResponse({"messages": list(messages.values())})
 
 def get_messages_list(request, dialog_id):
-    content = Content.objects.filter(dialog_id=dialog_id)
-    return JsonResponse(dict(content))
+    content = Content.objects.filter(dialog_id=dialog_id).values_list('message_id', flat=True)
+    messages = list(Message.objects.filter(id__in=content).values())
+    return JsonResponse({'messages': messages})
 
 def send_message(request):
     user_id = request.POST['user_id']
@@ -90,7 +91,7 @@ def send_message(request):
     message.save()
     content = Content.objects.create(dialog_id = dialog_id, message_id = message.id)
     content.save()
-    return HttpResponseRedirect(request.META['HTTP_REFERER'])
+    return HttpResponse('Отправлено')
 
 
 

@@ -24,7 +24,28 @@ main{
 }
 .chat-menu{
     width: 80vw;
+    height: calc(95vh - 1px);
+    display: flex;
+    flex-direction: column;
 }
+
+.messages{ 
+    display: flex;
+    height: 90%;
+    flex-direction: column;
+}
+.send_message{
+    height: 10%;
+}
+
+.my-mes{
+    align-self: flex-end;
+}
+
+.al-mes{
+    align-self: flex-start;
+}
+
 .message{
     width: 10vw;
     height: 5em;
