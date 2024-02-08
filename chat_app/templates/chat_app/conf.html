@@ -1,0 +1,42 @@
+{%load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="hidden" id="user_id" value="{{request.user.id}}">
+    <h1>Video chat Django</h1>
+    <h3 id="newUser"></h3>
+    <input type="text" id="username"/>
+    <button id="connectButton">Connect</button>
+    
+    <button id="btnCreateChat" style="display: none">Create chat</button>
+    
+    
+    <p>
+      <video autoplay="true" width="200" id="myVideo"></video>
+      <button id="getMedia">Turn on camera</button>
+    </p>
+    
+    <div>
+      <input type="text" id="calleeName"/>
+      <button id="callButton">Call</button>
+    </div>
+    <p>
+    <!--<button id="createOffer">Create offer</button>-->
+    </p>
+    <div id="acceptDiv" style="display: none">
+        Reciever login:<input type="text" id="callerName" />
+        <video autoplay="true" width="200" id="callVideo"></video>
+        <button id="acceptButton">Accept</button>
+        <button id="declineButton">Decline</button>
+    </div>
+    <script src="{% static 'vendor/js/conf_rtc.js' %}">
+    </script>
+    </body>
+    
+</html>

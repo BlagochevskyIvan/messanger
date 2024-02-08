@@ -38,8 +38,8 @@ def search_user(request):
     search = {'users': users}
     return render(request, 'chat_app/searched.html', search)
 
-def video(request):
-    return render(request, 'chat_app/video.html')
+def conf(request):
+    return render(request, 'chat_app/conf.html')
 
 def create_dialog(request, id_user):
     dialogs = Member.objects.filter(user_id__in = [id_user, request.user.id]).order_by('dialog_id')
