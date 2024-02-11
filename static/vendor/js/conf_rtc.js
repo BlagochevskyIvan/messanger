@@ -1,4 +1,20 @@
-console.log(user_id)
+let user_id = document.getElementById("user_id").value
+
+let config = {
+    iceServers: [
+        {urls: 'stun:178.250.157.153:3478'},
+        {
+            urls: "turn:178.250.157.153:3478",
+            user_id: user_id
+        }
+    ],
+    // iceTransportPolicy: "all"
+};
+
+console.log(config)
+let conn;
+let peerConnection;
+let dataChannel;
 let btnCamera = document.querySelector('#getMedia')
 
 const camera = document.querySelector('#myVideo');
@@ -29,34 +45,25 @@ function my_stream(e) {
 }
 
 function connect() {
-    username = userInput.value
-    if (username === '') {
-        alert('Your name is empty!')
-        return;
-    }
-    conn = new WebSocket('ws://127.0.0.1:8000/conf/' + 'test')
+    conn = new WebSocket('ws://127.0.0.1:8000/wconf/' + 'test')
     conn.addEventListener('open', (e) => {
         console.log("Connected to the signaling server");
-        initialize(username);
+        initialize();
     })
     // conn.addEventListener('message', onmessage)
-
-    btnCreateChat.style.display = 'block'
-    connectButton.style.display = 'none'
-    userInput.disabled = true
 }
 
-function initialize(username) {
+function initialize() {
     peerConnection = new RTCPeerConnection(config)
 
     peerConnection.onicecandidate = function (event) {
         if (event.candidate) {
             send({
-                peer: username,
+                peer: user_id,
                 event: "candidate",
                 data: event.candidate
             });
-            // console.log('event.candidate', event.candidate)
+            console.log('event.candidate', event.candidate)
         }
     };
 
@@ -84,3 +91,5 @@ function initialize(username) {
 }
 
 btnCamera.addEventListener('click', my_stream)
+
+document.addEventListener('DOMContentLoaded', connect)
