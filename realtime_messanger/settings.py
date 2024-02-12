@@ -30,16 +30,17 @@ ALLOWED_HOSTS = ["a0771598.xsph.ru", "127.0.0.1"]
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
+    "channels_redis",
+    "channels",
+    "user_app",
+    "chat_app",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "channels",
-    "corsheaders",
-    "user_app",
-    "chat_app",
 ]
 
 MIDDLEWARE = [
@@ -132,20 +133,11 @@ AUTH_USER_MODEL = "user_app.User"
 LOGIN_URL ='user/'
 
 
-REDIS_HOST = os.environ.get('REDIS_HOST', 'webrtc-redis-server')
-REDIS_PORT = os.environ.get('REDIS_PORT', '6379')
-
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [(REDIS_HOST, REDIS_PORT)],
+            "hosts": [("127.0.0.1", 6379)],
         },
     },
 }
-
-
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:8000",
-    "http://127.0.0.1:8000"
-]

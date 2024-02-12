@@ -45,7 +45,7 @@ function my_stream(e) {
 }
 
 function connect() {
-    conn = new WebSocket('ws://127.0.0.1:8000/wconf/' + 'test')
+    conn = new WebSocket('ws://127.0.0.1:8000/ws/conf/' + 'test')
     conn.addEventListener('open', (e) => {
         console.log("Connected to the signaling server");
         initialize();

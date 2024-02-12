@@ -51,17 +51,15 @@
                 {% csrf_token %}
                 <input type="hidden" name="user_id" value="{{request.user.id}}">
                 <input type="hidden" name="dialog_id" value="{{current_dialog}}">
-                <input type="text" name="text">
+                <input type="text" name="text" id="send_message_inp">
                 <input type="submit">
             </form>
         </div>
     </main>
     <!-- <div>${message.text}</div> -->
     <script type="text/javascript">
-        $('.contacts').on('click', '.link-dia', function (e){
-            // e.preventDefault();
-            console.log(e.currentTarget.id)
-
+        function get_messages_list(e){
+            console.log(1)
             $.ajax({
                 type:'GET',
                 url: "chat/get_messages_list/" + e.currentTarget.id,
@@ -77,6 +75,13 @@
                     }
                 }
             })
+        }
+
+        $('.contacts').on('click', '.link-dia', function (e){
+            // e.preventDefault();
+            console.log(e.currentTarget.id)
+
+            setInterval(get_messages_list, 1000, e)
         })
 
         $('.send_message').submit(function (e){
@@ -93,6 +98,7 @@
                 },
                 success: function(data){
                     console.log(data)
+                    $('input[name=text]').val('');
                 }
             })
 

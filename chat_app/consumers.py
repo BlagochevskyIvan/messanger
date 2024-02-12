@@ -5,23 +5,36 @@ from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
 from channels.layers import get_channel_layer
 from user_app.models import User
 
+# class ChatConsumer(WebsocketConsumer):
+#     def connect(self):
+#         self.accept()
+
+#     def disconnect(self, close_code):
+#         pass
+
+#     def receive(self, text_data):
+#         text_data_json = json.loads(text_data)
+#         message = text_data_json["message"]
+
+#         self.send(text_data=json.dumps({"message": message}))
+
 channel_layer = get_channel_layer()
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.conf_name = self.scope['url_route']['kwargs']['conf_name']
-        self.conf_group_name = f'conf_{self.conf_name}'
+        # self.conf_name = self.scope['url_route']['kwargs']['conf_name']
+        # self.conf_group_name = f'conf_{self.conf_name}'
 
-        await self.channel_layer.group_add(
-            self.conf_group_name,
-            self.channel_name
-        )
+        # await self.channel_layer.group_add(
+        #     self.conf_group_name,
+        #     self.channel_name
+        # )
 
-        await channel_layer.send(self.channel_name, {
-            "type": "send.sdp",
-            "data": {'channel': self.channel_name},
-        })
+        # await channel_layer.send(self.channel_name, {
+        #     "type": "send.sdp",
+        #     "data": {'channel': self.channel_name},
+        # })
         await self.accept()
 
     async def disconnect(self, close_code):
