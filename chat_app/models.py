@@ -38,7 +38,7 @@ class Message(models.Model):
     author = models.ForeignKey(to = User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.id}. Тип: {self.type_message}. Автор: {self.author}'
+        return f'{self.id}. Тип: {self.type_message}. Автор: {self.author} Текст {self.text}'
 
 
 class Member(models.Model):

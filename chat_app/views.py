@@ -56,7 +56,7 @@ def create_dialog(request, id_user):
                 if dialog.dialog.category_id == 1:
                     # Переводим человека в этот диалог
                     print(dialog)
-                    return HttpResponseRedirect(f'/chat/chat/?dialog={dialog.dialog.id}')
+                    return HttpResponseRedirect(f'/?dialog={dialog.dialog.id}')
                     break
         else:
             # создаем диалог
@@ -67,7 +67,7 @@ def create_dialog(request, id_user):
                 member1.save()
             member2 = Member.objects.create(dialog = dia, user_id = request.user.id)
             member2.save()
-            return HttpResponseRedirect(f'/chat/chat/?dialog={dia.id}')
+            return HttpResponseRedirect(f'/?dialog={dia.id}')
 
 def dialog(request):
     return render(request, 'chat_app/dialog.html')

@@ -58,11 +58,17 @@
     </main>
     <!-- <div>${message.text}</div> -->
     <script type="text/javascript">
-        function get_messages_list(e){
+        const urlParams = new URLSearchParams(window.location.search);
+        const dialog_id = urlParams.get('dialog');
+        console.log(dialog_id);
+        if (dialog_id != null){
+            setInterval(get_messages_list, 1000, dialog_id);
+        }
+        function get_messages_list(dialog_id){
             console.log(1)
             $.ajax({
                 type:'GET',
-                url: "chat/get_messages_list/" + e.currentTarget.id,
+                url: "chat/get_messages_list/" + dialog_id,
                 success: function (data){
                     console.log(data.messages)
                     $('.messages').empty()
@@ -78,11 +84,10 @@
         }
 
         $('.contacts').on('click', '.link-dia', function (e){
-            // e.preventDefault();
             console.log(e.currentTarget.id)
-
-            setInterval(get_messages_list, 1000, e)
+            //e.preventDefault();
         })
+        
 
         $('.send_message').submit(function (e){
             e.preventDefault();

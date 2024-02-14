@@ -38,7 +38,7 @@ def reg(request):
         if user_reg.is_valid():
             print('valid')
             user_reg.save()
-            return HttpResponseRedirect(reverse('user_app:sign_in'))
+            return HttpResponseRedirect(reverse('user_app:main'))
     context = {
         "registration": user_reg
     }
