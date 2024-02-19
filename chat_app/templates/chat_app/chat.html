@@ -1,115 +1,168 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+            integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        ></script>
+        <link rel="stylesheet" href="{% static 'vendor/css/chat.css'%}" />
+        <title>Document</title>
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="{% static 'vendor/css/chat.css'%}">
-    <title>Document</title>
-</head>
+    <body>
+        <header>
+            <form action="{% url 'chat_app:search_user'%}">
+                <input type="text" name="username" />
+                <input type="submit" />
+            </form>
 
-<body>
-    <header>
-        <form action="{% url 'chat_app:search_user'%}">
-            <input type="text" name="username">
-            <input type="submit">
-        </form>
-
-        <a href="{%url 'user_app:logout'%}">Выйти</a>
-        <a href="{%url 'user_app:settings'%}">Настройки</a>
-    </header>
-    <main>
-        <div class="nav-menu">
-            <div class="contacts" id="contacts">
-                {% for dialog in dialogs %}
-                <a class='link-dia' id="{{dialog.dialog_info.id}}" href="?dialog={{dialog.dialog_info.id}}">
-                    <div class="contact {% if current_dialog == dialog.dialog_info.id %} active {% endif%}">
-                        {{dialog.name}}
-                        <img src="{{dialog.dialog_info.avatar.url}}" alt="">
-                    </div>
-                </a>
-                {%endfor%}
+            <a href="{%url 'user_app:logout'%}">Выйти</a>
+            <a href="{%url 'user_app:settings'%}">Настройки</a>
+        </header>
+        <main>
+            <div class="nav-menu">
+                <div class="contacts" id="contacts">
+                    {% for dialog in dialogs %}
+                    <a
+                        class="link-dia"
+                        id="{{dialog.dialog_info.id}}"
+                        href="?dialog={{dialog.dialog_info.id}}"
+                    >
+                        <div
+                            class="contact {% if current_dialog == dialog.dialog_info.id %} active {% endif%}"
+                        >
+                            {{dialog.name}}
+                            <img
+                                src="{{dialog.dialog_info.avatar.url}}"
+                                alt=""
+                            />
+                        </div>
+                    </a>
+                    {%endfor%}
+                </div>
             </div>
-        </div>
-        <div class="chat-menu">
-            <div class="messages">
-                {% if messages %}
-                    {% for message in messages%}
+            <div class="chat-menu">
+                <div class="messages">
+                    {% if messages %}
+                    <!-- {% for message in messages%}
                         <div class="message">
                             {{message.message.text}}
                         </div>
-                    {%endfor%}
-                {% elif messages == None %}
-                    Выберите пользователя для общения
-                {% else %}
-                    У вас пока нет переписки с этим пользователем
-                {% endif %}
+                    {%endfor%} -->
+                    {% elif messages == None %} Выберите пользователя для
+                    общения {% else %} У вас пока нет переписки с этим
+                    пользователем {% endif %}
+                </div>
+                <form class="send_message">
+                    {% csrf_token %}
+                    <input
+                        type="hidden"
+                        name="user_id"
+                        value="{{request.user.id}}"
+                    />
+                    <input
+                        type="hidden"
+                        name="dialog_id"
+                        value="{{current_dialog}}"
+                    />
+                    <input type="text" name="text" id="send_message_inp" />
+                    <input type="submit" />
+                </form>
             </div>
-            <form class="send_message">
-                {% csrf_token %}
-                <input type="hidden" name="user_id" value="{{request.user.id}}">
-                <input type="hidden" name="dialog_id" value="{{current_dialog}}">
-                <input type="text" name="text" id="send_message_inp">
-                <input type="submit">
-            </form>
-        </div>
-    </main>
-    <!-- <div>${message.text}</div> -->
-    <script type="text/javascript">
-        const urlParams = new URLSearchParams(window.location.search);
-        const dialog_id = urlParams.get('dialog');
-        console.log(dialog_id);
-        if (dialog_id != null){
-            setInterval(get_messages_list, 1000, dialog_id);
-        }
-        function get_messages_list(dialog_id){
-            console.log(1)
-            $.ajax({
-                type:'GET',
-                url: "chat/get_messages_list/" + dialog_id,
-                success: function (data){
-                    console.log(data.messages)
-                    $('.messages').empty()
-                    let user_id = +'{{user_id}}'
-                    for(let i in data.messages){
-                        console.log(data.messages[i])
-                        let message = data.messages[i]
-                        let message_div = `<div class="message ${(user_id===message.author_id)?'my-mes' : 'al-mes'}">${message.text}</div>` 
-                        $('.messages').append(message_div)
-                    }
-                }
-            })
-        }
+        </main>
+        <!-- <div>${message.text}</div> -->
+        <script type="text/javascript">
+            function get_messages_list(dialog_id) {
+                console.log(1);
+                $.ajax({
+                    type: "GET",
+                    url: "chat/get_messages_list/" + dialog_id,
+                    success: function (data) {
+                        // console.log(data);
+                        // console.log(data.messages);
+                        // '1' == 1 -> true
+                        if (data.messages.length === 0) {
+                            $(".messages").empty();
+                            $(".messages").append(
+                                '<p class="dialog_information">У вас нет переписки с данным пользователем</p>'
+                            );
+                        } else {
+                            let message_list =
+                                document.querySelectorAll(".message");
+                            let user_id = +"{{user_id}}";
+                            if (message_list.length != 0) {
+                                let last_message = message_list[message_list.length - 1];
+                                console.log(last_message.id);
+                                for (let i in data.messages){
+                                    console.log(last_message.id, data.messages[i].id)
+                                    if (data.messages[i].id == last_message.id){
+                                        var num_last_mes = i
+                                        break
+                                    }
+                                }
+                                for (let i = num_last_mes; i < data.messages.length-1; i++) {
+                                    // console.log(data.messages[i]);
+                                    let message = data.messages[i];
+                                    let message_div = `<div class="message ${
+                                        user_id === message.author_id
+                                            ? "my-mes"
+                                            : "al-mes"
+                                    }" id=${message.id}>${message.text}</div>`;
+                                    $(".messages").append(message_div);
+                                }
+                            } else {
+                                $(".messages").empty();
+                                for (let i in data.messages) {
+                                    console.log(data.messages[i]);
+                                    let message = data.messages[i];
+                                    let message_div = `<div class="message ${
+                                        user_id === message.author_id
+                                            ? "my-mes"
+                                            : "al-mes"
+                                    }" id=${message.id}>${message.text}</div>`;
+                                    $(".messages").append(message_div);
+                                }
+                            }
+                        }
+                    },
+                });
+            }
+            const urlParams = new URLSearchParams(window.location.search);
+            const dialog_id = urlParams.get("dialog"); // null / число
+            console.log(dialog_id);
+            if (dialog_id != null) {
+                get_messages_list(dialog_id);
+                setInterval(get_messages_list, 1000, dialog_id);
+            }
+            $(".contacts").on("click", ".link-dia", function (e) {
+                console.log(e.currentTarget.id);
+                //e.preventDefault();
+            });
 
-        $('.contacts').on('click', '.link-dia', function (e){
-            console.log(e.currentTarget.id)
-            //e.preventDefault();
-        })
-        
-
-        $('.send_message').submit(function (e){
-            e.preventDefault();
-            $.ajax({
-                type: 'POST',
-                url: 'chat/sendmessage',
-                data: 
-                {
-                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-                    user_id: $('input[name=user_id]').val(),
-                    dialog_id: $('input[name=dialog_id]').val(),
-                    text: $('input[name=text]').val(),                    
-                },
-                success: function(data){
-                    console.log(data)
-                    $('input[name=text]').val('');
-                }
-            })
-
-        })
-
-    </script>
-</body>
-
+            $(".send_message").submit(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "chat/sendmessage",
+                    data: {
+                        csrfmiddlewaretoken: $(
+                            "input[name=csrfmiddlewaretoken]"
+                        ).val(),
+                        user_id: $("input[name=user_id]").val(),
+                        dialog_id: $("input[name=dialog_id]").val(),
+                        text: $("input[name=text]").val(),
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        $("input[name=text]").val("");
+                    },
+                });
+            });
+        </script>
+    </body>
 </html>
