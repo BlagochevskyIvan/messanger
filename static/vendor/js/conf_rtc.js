@@ -11,7 +11,7 @@ let config = {
     // iceTransportPolicy: "all"
 };
 
-console.log(config)
+// console.log(config)
 let conn;
 let peerConnection;
 let dataChannel;
@@ -43,13 +43,20 @@ function my_stream(e) {
         console.log('Error media', error)
     })
 }
-
+// (event) => {}
+// function foo(event){}
 function connect() {
-    conn = new WebSocket('ws://127.0.0.1:8000/ws/conf/' + 'test')
-    conn.addEventListener('open', (e) => {
+    conn = new WebSocket('ws://127.0.0.1:8000/ws/conf/' + 'test/')
+    conn.addEventListener('open', (event) => {
         console.log("Connected to the signaling server");
-        initialize();
+        console.log(event);
+        // initialize();
     })
+    conn.addEventListener("message", (event) => {
+        console.log("сообщение получено")
+        console.log(event)
+    })
+    conn.send('Наше сообщение')
     // conn.addEventListener('message', onmessage)
 }
 
@@ -92,4 +99,7 @@ function initialize() {
 
 btnCamera.addEventListener('click', my_stream)
 
-document.addEventListener('DOMContentLoaded', connect)
+// document.addEventListener('DOMContentLoaded', connect)
+
+let buttonConnect = document.querySelector("#btnConnect")
+buttonConnect.addEventListener('click', connect)

@@ -97,15 +97,13 @@
                             let user_id = +"{{user_id}}";
                             if (message_list.length != 0) {
                                 let last_message = message_list[message_list.length - 1];
-                                console.log(last_message.id);
                                 for (let i in data.messages){
-                                    console.log(last_message.id, data.messages[i].id)
                                     if (data.messages[i].id == last_message.id){
                                         var num_last_mes = i
                                         break
                                     }
                                 }
-                                for (let i = num_last_mes; i < data.messages.length-1; i++) {
+                                for (i = +num_last_mes + 1; i < data.messages.length; i++) {
                                     // console.log(data.messages[i]);
                                     let message = data.messages[i];
                                     let message_div = `<div class="message ${
@@ -132,6 +130,7 @@
                     },
                 });
             }
+
             const urlParams = new URLSearchParams(window.location.search);
             const dialog_id = urlParams.get("dialog"); // null / число
             console.log(dialog_id);
