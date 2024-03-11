@@ -25,16 +25,16 @@ SECRET_KEY = "django-insecure-t&cg865$-x((-pg(mkk%h=+a^+k6!qell#jj)_n=q%n3@)!wsn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["a0771598.xsph.ru", "127.0.0.1"]
+ALLOWED_HOSTS = ["127.0.0.1", "0.0.0.0", "localhost"]
 
 # Application definition
 
 INSTALLED_APPS = [
+    "chat_app",
     'daphne',
     "channels_redis",
     "channels",
     "user_app",
-    "chat_app",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

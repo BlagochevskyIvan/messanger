@@ -56,8 +56,12 @@ function connect() {
         console.log("сообщение получено")
         console.log(event)
     })
-    conn.send('Наше сообщение')
+    
     // conn.addEventListener('message', onmessage)
+}
+
+function send_message(){
+    conn.send(JSON.stringify({'message':'HEllo'}))
 }
 
 function initialize() {
@@ -103,3 +107,6 @@ btnCamera.addEventListener('click', my_stream)
 
 let buttonConnect = document.querySelector("#btnConnect")
 buttonConnect.addEventListener('click', connect)
+
+let buttonSend = document.querySelector("#btnSend")
+buttonSend.addEventListener('click', send_message)
