@@ -10,5 +10,5 @@ urlpatterns = [
     path("chat/get_messages_list/<dialog_id>", get_messages_list, name="get_messages_list"),
     path("chat/get_messages", get_messages, name="get_messages"),
     path("chat/sendmessage", send_message, name="send_message"),
-    path("conf/", conf, name="conf"),
+    path("conf/<int:conf_id>", conf, name="conf"),
 ]

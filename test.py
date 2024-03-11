@@ -3,3 +3,6 @@ class Foo:
         return 'привет'
 foo = Foo()
 print(foo)
+
+import uuid
+print(uuid.uuid4())

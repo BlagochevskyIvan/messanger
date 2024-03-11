@@ -46,17 +46,40 @@ function my_stream(e) {
 // (event) => {}
 // function foo(event){}
 function connect() {
-    conn = new WebSocket('ws://127.0.0.1:8000/ws/conf/' + 'test/')
+    const url = new URL(window.location)
+    console.log(url.pathname) 
+    conn = new WebSocket('ws://127.0.0.1:8000/ws' + url.pathname + '/')
     conn.addEventListener('open', (event) => {
         console.log("Connected to the signaling server");
         console.log(event);
         // initialize();
     })
-    conn.addEventListener("message", (event) => {
+    
+    conn.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        document.querySelector('#chat-log').value += (data.message + '\n');
         console.log("сообщение получено")
         console.log(event)
-    })
-    
+    };
+
+    conn.onclose = function(event) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#chat-message-input').onkeyup = function(event) {
+        console.log(event.key)
+        if (event.key === 'Enter') {  // enter, return
+            document.querySelector('#chat-message-submit').click();
+        }
+    };
+    document.querySelector('#chat-message-submit').onclick = function(e) {
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const message = messageInputDom.value;
+        conn.send(JSON.stringify({
+            'message': message
+        }));
+        messageInputDom.value = '';
+    };
     // conn.addEventListener('message', onmessage)
 }
 
