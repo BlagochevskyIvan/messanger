@@ -5,11 +5,13 @@ let config = {
         {urls: 'stun:178.250.157.153:3478'},
         {
             urls: "turn:178.250.157.153:3478",
-            user_id: user_id
+            username: user_id,
+            credential: "test123"
         }
     ],
     // iceTransportPolicy: "all"
 };
+
 
 // console.log(config)
 let conn;
@@ -52,7 +54,7 @@ function connect() {
     conn.addEventListener('open', (event) => {
         console.log("Connected to the signaling server");
         console.log(event);
-        // initialize();
+        initialize(user_id);
     })
     
     conn.onmessage = function(event) {
@@ -66,12 +68,29 @@ function connect() {
         console.error('Chat socket closed unexpectedly');
     };
 
-    document.querySelector('#chat-message-input').onkeyup = function(event) {
-        console.log(event.key)
-        if (event.key === 'Enter') {  // enter, return
-            document.querySelector('#chat-message-submit').click();
+    let shiftIsPressed = false;
+
+    $(window).keydown(function(event){
+        if (event.keyCode == 16) {
+            shiftIsPressed = true; 
+            event.preventDefault();
         }
-    };
+    }); 
+
+    $(window).keyup(function(event){
+        if (event.keyCode == 16) {
+            shiftIsPressed = false;
+            event.preventDefault();
+        }    
+    });
+
+    $(window).on('keydown', function(event) {
+    if (!shiftIsPressed && event.keyCode === 13) {
+        document.querySelector('#chat-message-submit').click();
+        }
+    });
+
+
     document.querySelector('#chat-message-submit').onclick = function(e) {
         const messageInputDom = document.querySelector('#chat-message-input');
         const message = messageInputDom.value;
@@ -80,16 +99,19 @@ function connect() {
         }));
         messageInputDom.value = '';
     };
-    // conn.addEventListener('message', onmessage)
 }
 
 function send_message(){
     conn.send(JSON.stringify({'message':'HEllo'}))
+    // dataChannel.send('hello')
+
 }
 
-function initialize() {
+function initialize(user_id) {
     peerConnection = new RTCPeerConnection(config)
+    console.log(peerConnection)
 
+    
     peerConnection.onicecandidate = function (event) {
         if (event.candidate) {
             send({
@@ -121,6 +143,9 @@ function initialize() {
 
     peerConnection.ondatachannel = function (event) {
         dataChannel = event.channel
+    }
+    peerConnection.oniceconnectionstatechange = function(event){
+        console.log("ICE",event)
     }
 }
 
