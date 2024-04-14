@@ -1,5 +1,5 @@
 from django.urls import path, include
-from chat_app.views import chat, conf, search_user, create_dialog, get_messages, send_message,get_messages_list
+from chat_app.views import chat, conf_active, search_user, create_dialog, get_messages, send_message, get_messages_list, conf
 
 app_name = "chat_app"
 
@@ -10,5 +10,6 @@ urlpatterns = [
     path("chat/get_messages_list/<dialog_id>", get_messages_list, name="get_messages_list"),
     path("chat/get_messages", get_messages, name="get_messages"),
     path("chat/sendmessage", send_message, name="send_message"),
-    path("conf/<int:conf_id>", conf, name="conf"),
+    path("conf/<int:conf_id>", conf_active, name="conf_active"),
+    path("conf/", conf, name="conf"),
 ]

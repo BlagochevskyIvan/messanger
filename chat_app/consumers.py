@@ -37,16 +37,21 @@ from user_app.models import User
 #         # Send message to WebSocket
 #         self.send(text_data=json.dumps({"message": message}))
 
+channel_layer = get_channel_layer()
+
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.conf_name = self.scope['url_route']['kwargs']['conf_name']
-        self.conf_group_name = f'conf_{self.conf_name}'
+        self.conf_name = self.scope["url_route"]["kwargs"]["conf_name"]
+        self.conf_group_name = f"conf_{self.conf_name}"
 
-        await self.channel_layer.group_add(
-            self.conf_group_name,
-            self.channel_name
+        await self.channel_layer.group_add(self.conf_group_name, self.channel_name)
+
+        await channel_layer.send(
+            self.channel_name,
+            {"type": "send.sdp", "data": {"channel": self.channel_name}},
         )
+        print({"type": "send.sdp", "data": {"channel": self.channel_name}})
 
         await self.accept()
 
@@ -55,20 +60,29 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        message = text_data_json["message"]
-
-        # Send message to room group
-        await self.channel_layer.group_send(
-            self.conf_group_name, {"type": "chat_message", "message": message}
-        )
+        print('receive', text_data_json)
+        type_event = text_data_json["type"]
+        if type_event == "login":
+            print(text_data_json["data"])
+        elif type_event == "chat_message":
+            message = text_data_json["message"]
+            # Send message to room group
+            await self.channel_layer.group_send(
+                self.conf_group_name, {"type": "chat_message", "message": message}
+            )
 
         # Receive message from room group
+    async def send_sdp(self, event):
+        receive = event
+        # ВОТ ТУТ НАДО ПРАВИЛЬНО НАСТРОИТЬ СОБЫТИЕ
+        await self.send(json.dumps(receive))
+        
     async def chat_message(self, event):
-        message = event["message"]
-        print(message)
+        message = event
+        print('chat_message', message)
         # Send message to WebSocket
-        await self.send(text_data=json.dumps({"message": message}))
-
+        # ВОТ ТУТ НАДО ПРАВИЛЬНО НАСТРОИТЬ СОБЫТИЕ
+        await self.send(text_data=json.dumps(message))
 
 
 # class ChatConsumer(AsyncWebsocketConsumer):

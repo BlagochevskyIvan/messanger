@@ -1,36 +1,19 @@
-{%load static%}
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Document</title>
-        <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-            integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"
-        ></script>
     </head>
     <body>
-        <input type="hidden" id="user_id" value="{{request.user.id}}" />
-        <h1>Video chat Django</h1>
-        {{ conf_id }}
-        <h3 id="newUser"></h3>
-
-        <button id="btnConnect">Connect</button>
-        <button id="btnSend">Send Hello</button>
-
-        <textarea id="chat-log" cols="100" rows="20"></textarea><br />
-        <textarea id="chat-message-input" type="text"></textarea><br />
-        <input id="chat-message-submit" type="button" value="Send" />
-
-        <p>
-            <video autoplay="true" width="200" id="myVideo"></video>
-            <button id="getMedia">Turn on camera</button>
-        </p>
-
-        <script src="{% static 'vendor/js/conf_rtc.js' %}"></script>
+        <label for="conf_id">Введите id конференции:</label>
+        <input type="text" name="conf_id" id="conf_id" />
+        <button onclick="go_to()">Войти</button>
+        <script>
+            function go_to() {
+                let conf_id = document.querySelector("#conf_id");
+                window.location.href = "./" + conf_id.value;
+            }
+        </script>
     </body>
 </html>

@@ -1,9 +1,11 @@
+import random
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from chat_app.models import *
 from user_app.models import User
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+import uuid
 
 # Create your views here.
 
@@ -31,6 +33,7 @@ def chat(request):
         context['messages'] = messages
         context['current_dialog'] = int(dialog_requested_id)
 
+    context['conf_id'] = random.randint(1000,9999)
     return render(request, 'chat_app/chat.html', context)
 
 def search_user(request):
@@ -38,9 +41,12 @@ def search_user(request):
     search = {'users': users}
     return render(request, 'chat_app/searched.html', search)
 
-def conf(request, conf_id):
+def conf_active(request, conf_id):
     context = {'conf_id': conf_id}
-    return render(request, 'chat_app/conf.html', context)
+    return render(request, 'chat_app/conf_active.html', context)
+
+def conf(request):
+    return render(request, 'chat_app/conf.html')
 
 def create_dialog(request, id_user):
     dialogs = Member.objects.filter(user_id__in = [id_user, request.user.id]).order_by('dialog_id')
